@@ -187,9 +187,9 @@ function removeItemFromCart() {
     <body>
         <div class="container mt-1">
             <h6 class="text-center mb-0" id="savePdfButton">ASGHAR ALI (RINKU)</h6>
-            <p class="text-center mb-0" >Hospital road
-Dr. MK Alam wali gali
-Near Sadhu Medical, Siwan</p>
+            <p class="text-center mb-0" >Hospital road,
+Near Sadhu Medical</p>
+<p class="text-center mb-0" >Dr. MK Alam wali gali, Siwan</p>
             <p class="text-center mt-0">PNo. 7717793294/9006500135</p>
             <hr style="border: none; border-top: 1px dotted #000; width: 100%;" />
             <p class="mb-0"><strong>Bill To: </strong> ${customerName}</p>

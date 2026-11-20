@@ -37,17 +37,17 @@ $(document).ready(function () {
       };
 
       items.push(item);
+
       $("#cart-table tbody").append(
-        "<tr><td>" +
-          item.name +
-          "</td><td>₹" +
-          item.price.toFixed(2) +
-          "</td><td>" +
-          item.qty +
-          "</td><td>₹" +
-          (item.price * item.qty).toFixed(2) +
-          '</td><td><button class="btn btn-sm btn-danger"><i class="fa fa-trash-alt"></i></button></td></tr>'
+        "<tr>" +
+          '<td class="cart-item-name">' + item.name + "</td>" +
+          '<td class="cart-price">₹' + item.price.toFixed(2) + "</td>" +
+          '<td class="cart-qty">' + item.qty + "</td>" +
+          '<td class="cart-amount">₹' + (item.price * item.qty).toFixed(2) + "</td>" +
+          '<td><button class="btn btn-sm btn-danger"><i class="fa fa-trash-alt"></i></button></td>' +
+        "</tr>"
       );
+
       updateTotalCost();
       updateTotalQty();
       updateTotalAmt();
@@ -78,7 +78,7 @@ $(document).ready(function () {
     items.forEach(function (item) {
       totalCost += item.price * item.qty;
     });
-    $("#total-cost").text("Amount: ₹" + totalCost.toFixed(2));
+    $("#total-cost").text("₹" + totalCost.toFixed(2));
   }
 
   $("#prev-dues").on("input", function () {
@@ -97,7 +97,7 @@ $(document).ready(function () {
       totalAmt += item.price * item.qty;
     });
     totalAmt += prevDues;
-    $("#total-amount").text("TOTAL : ₹" + totalAmt.toFixed(2));
+    $("#total-amount").text("₹" + totalAmt.toFixed(2));
     updateCurrentDue();
   }
 
@@ -108,7 +108,7 @@ $(document).ready(function () {
     });
     totalAmt += prevDues;
     var currentDue = totalAmt - amountPaid;
-    $("#current-due").text("Current Due: ₹" + currentDue.toFixed(2));
+    $("#current-due").text("₹" + currentDue.toFixed(2));
   }
 
   function updateTotalQty() {
@@ -116,7 +116,7 @@ $(document).ready(function () {
     items.forEach(function (item) {
       totalQty += item.qty;
     });
-    $("#total-qty").text("Total Qty: " + totalQty);
+    $("#total-qty").text(totalQty);
   }
 
   function getCurrentDate() {
@@ -176,27 +176,31 @@ $(document).ready(function () {
     var safeName = customerName.replace(/[^a-zA-Z0-9]/g, "_");
     var filename = safeName + "_" + dateStr.replace(/\//g, "-") + ".pdf";
 
-    // Build invoice HTML
+    // Build invoice HTML (bigger fonts throughout)
     var invoiceHtml = `
       <div class="invoice-container" id="thermal-invoice">
         <div class="shop-name">ASGHAR ALI (RINKU)</div>
-        <div style="text-align:center; font-size:9px; font-weight:600;">Hospital road, Near Sadhu Medical</div>
-        <div style="text-align:center; font-size:9px; font-weight:600;">Dr. MK Alam wali gali, Siwan</div>
-        <div style="text-align:center; font-size:10px; font-weight:700;">PNo. 7717793294 / 9006500135</div>
+        <div class="shop-address">Hospital road, Near Sadhu Medical</div>
+        <div class="shop-address">Dr. MK Alam wali gali, Siwan</div>
+        <div class="shop-phone">PNo. 7717793294 / 9006500135</div>
         <hr />
-        <div style="display:flex; justify-content:space-between; font-size:10px; font-weight:700;">
+        <div class="bill-row">
           <span>Bill To: ${customerName}</span>
-          <span>${dateStr} ${timeStr}</span>
+          <span>${dateStr}</span>
+        </div>
+        <div class="bill-row">
+          <span></span>
+          <span>TM: ${timeStr}</span>
         </div>
         <hr />
         <table>
           <thead>
             <tr>
-              <th style="width:8%;">S.N</th>
-              <th style="width:42%;">ITEM</th>
+              <th style="width:10%;">S.N</th>
+              <th style="width:38%;">ITEM</th>
               <th style="width:12%; text-align:right;">QTY</th>
-              <th style="width:19%; text-align:right;">RATE</th>
-              <th style="width:19%; text-align:right;">AMNT</th>
+              <th style="width:20%; text-align:right;">RATE</th>
+              <th style="width:20%; text-align:right;">AMNT</th>
             </tr>
           </thead>
           <tbody>
@@ -206,7 +210,7 @@ $(document).ready(function () {
       invoiceHtml += `
         <tr>
           <td>${index + 1}</td>
-          <td>${item.name}</td>
+          <td class="invoice-item-name">${item.name}</td>
           <td class="text-right">${item.qty}</td>
           <td class="text-right">₹${item.price.toFixed(2)}</td>
           <td class="text-right">₹${(item.price * item.qty).toFixed(2)}</td>
@@ -228,7 +232,7 @@ $(document).ready(function () {
         <div class="print-btn">
           <button onclick="window.print()"><i class="fas fa-print"></i> PRINT</button>
         </div>
-        <div style="font-size:7px; text-align:center; margin-top:4px;">(80mm thermal ready)</div>
+        <div style="font-size:9px; text-align:center; margin-top:6px;">(80mm thermal ready)</div>
       </div>
     `;
 
@@ -249,7 +253,7 @@ $(document).ready(function () {
               font-family: 'Courier New', Courier, monospace;
               background: #fff;
               margin: 0;
-              padding: 6px;
+              padding: 8px;
               display: flex;
               justify-content: center;
             }
@@ -257,85 +261,113 @@ $(document).ready(function () {
               width: 80mm;
               max-width: 80mm;
               background: #fff;
-              padding: 4px 6px 8px;
-              font-size: 11px;
-              line-height: 1.3;
+              padding: 6px 8px 10px;
+              font-size: 14px;
+              line-height: 1.45;
               color: #000;
               font-weight: 700;
               border: 1px solid #ccc;
+              font-family: 'Courier New', Courier, monospace;
             }
             .shop-name {
               font-family: 'Playfair Display', serif;
-              font-size: 18px;
+              font-size: 24px;
               font-weight: 700;
               letter-spacing: 1px;
               text-align: center;
-              margin: 0 0 2px;
+              margin: 0 0 4px;
               color: #111;
               text-shadow: 0.5px 0.5px 0 #aaa;
               text-transform: uppercase;
             }
+            .shop-address {
+              text-align: center;
+              font-size: 12px;
+              font-weight: 700;
+              line-height: 1.3;
+            }
+            .shop-phone {
+              text-align: center;
+              font-size: 13px;
+              font-weight: 800;
+              margin: 2px 0;
+            }
             hr {
               border: none;
-              border-top: 1px dashed #000;
-              margin: 4px 0;
-              opacity: 0.7;
+              border-top: 1.5px dashed #000;
+              margin: 6px 0;
+              opacity: 0.8;
+            }
+            .bill-row {
+              display: flex;
+              justify-content: space-between;
+              font-size: 13px;
+              font-weight: 800;
+              margin: 3px 0;
             }
             table {
               width: 100%;
               border-collapse: collapse;
-              font-size: 10px;
+              font-size: 13px;
               font-weight: 700;
-              margin: 4px 0;
+              margin: 6px 0;
             }
             th, td {
-              padding: 2px 1px;
-              border-bottom: 1px dotted #aaa;
+              padding: 4px 2px;
+              border-bottom: 1px dotted #888;
+              word-wrap: break-word;
             }
             th {
               text-align: left;
-              font-weight: 800;
-              border-bottom: 1px solid #000;
-              font-size: 10px;
+              font-weight: 900;
+              border-bottom: 2px solid #000;
+              font-size: 12px;
               text-transform: uppercase;
             }
             .text-right {
               text-align: right;
             }
+            .invoice-item-name {
+              text-transform: uppercase;
+              font-weight: 900;
+              font-size: 14px;
+              letter-spacing: 0.3px;
+              text-align: left !important;
+            }
             .footer-line {
               display: flex;
               justify-content: space-between;
-              font-weight: 700;
-              margin: 2px 0;
-              font-size: 11px;
+              font-weight: 800;
+              margin: 4px 0;
+              font-size: 14px;
             }
             .total-line {
               font-weight: 900;
-              font-size: 12px;
-              border-top: 1px solid #000;
-              padding-top: 3px;
-              margin-top: 3px;
+              font-size: 16px;
+              border-top: 2px solid #000;
+              padding-top: 5px;
+              margin-top: 5px;
             }
             .thanks {
               text-align: center;
-              font-weight: 700;
-              margin-top: 6px;
-              font-size: 11px;
-              letter-spacing: 0.5px;
+              font-weight: 800;
+              margin-top: 10px;
+              font-size: 14px;
+              letter-spacing: 0.8px;
             }
             .print-btn {
               text-align: center;
-              margin-top: 8px;
+              margin-top: 12px;
             }
             .print-btn button {
               background: #222;
               color: #fff;
               border: none;
-              padding: 4px 12px;
-              font-size: 10px;
+              padding: 6px 16px;
+              font-size: 12px;
               font-weight: bold;
               cursor: pointer;
-              border-radius: 3px;
+              border-radius: 4px;
             }
             .print-btn button:hover {
               background: #444;
@@ -357,7 +389,7 @@ $(document).ready(function () {
                 filename:     '${filename}',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, letterRendering: true, useCORS: true },
-                jsPDF:        { unit: 'mm', format: [80, 200], orientation: 'portrait' }
+                jsPDF:        { unit: 'mm', format: [80, 220], orientation: 'portrait' }
               };
               html2pdf().set(opt).from(element).save();
             };

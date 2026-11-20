@@ -8,7 +8,6 @@ $(document).ready(function () {
   $("#cart-table").on("click", ".btn-danger", removeItemFromCart);
   $("#generate-invoice").on("click", generateInvoice);
 
-  // Enter key = Add to Cart
   $("#item-form input").on("keydown", function (e) {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -172,11 +171,9 @@ $(document).ready(function () {
     var timeStr = hours + ":" + minutes + " " + ampm;
     var dateStr = getCurrentDate();
 
-    // Filename: <customerName>_<dd-mm-yyyy>.pdf
     var safeName = customerName.replace(/[^a-zA-Z0-9]/g, "_");
     var filename = safeName + "_" + dateStr.replace(/\//g, "-") + ".pdf";
 
-    // Build invoice HTML (bigger fonts throughout)
     var invoiceHtml = `
       <div class="invoice-container" id="thermal-invoice">
         <div class="shop-name">ASGHAR ALI (RINKU)</div>
@@ -197,10 +194,10 @@ $(document).ready(function () {
           <thead>
             <tr>
               <th style="width:10%;">S.N</th>
-              <th style="width:38%;">ITEM</th>
+              <th style="width:34%;">ITEM</th>
               <th style="width:12%; text-align:right;">QTY</th>
-              <th style="width:20%; text-align:right;">RATE</th>
-              <th style="width:20%; text-align:right;">AMNT</th>
+              <th style="width:21%; text-align:right;">RATE</th>
+              <th style="width:23%; text-align:right;">AMNT</th>
             </tr>
           </thead>
           <tbody>
@@ -232,11 +229,11 @@ $(document).ready(function () {
         <div class="print-btn">
           <button onclick="window.print()"><i class="fas fa-print"></i> PRINT</button>
         </div>
-        <div style="font-size:9px; text-align:center; margin-top:6px;">(80mm thermal ready)</div>
+        <div style="font-size:11px; text-align:center; margin-top:8px;">(80mm thermal ready)</div>
       </div>
     `;
 
-    var popup = window.open("", "_blank", "width=420,height=620");
+    var popup = window.open("", "_blank", "width=460,height=720");
     popup.document.open();
     popup.document.write(`
       <!DOCTYPE html>
@@ -261,68 +258,71 @@ $(document).ready(function () {
               width: 80mm;
               max-width: 80mm;
               background: #fff;
-              padding: 6px 8px 10px;
-              font-size: 14px;
-              line-height: 1.45;
+              padding: 8px 6px 12px;
+              font-size: 17px;
+              line-height: 1.5;
               color: #000;
-              font-weight: 700;
+              font-weight: 900;
               border: 1px solid #ccc;
               font-family: 'Courier New', Courier, monospace;
             }
             .shop-name {
               font-family: 'Playfair Display', serif;
-              font-size: 24px;
+              font-size: 28px;
               font-weight: 700;
               letter-spacing: 1px;
               text-align: center;
-              margin: 0 0 4px;
-              color: #111;
-              text-shadow: 0.5px 0.5px 0 #aaa;
+              margin: 0 0 6px;
+              color: #000;
+              text-shadow: 1px 1px 0 #999;
               text-transform: uppercase;
             }
             .shop-address {
               text-align: center;
-              font-size: 12px;
-              font-weight: 700;
-              line-height: 1.3;
+              font-size: 14px;
+              font-weight: 800;
+              line-height: 1.35;
             }
             .shop-phone {
               text-align: center;
-              font-size: 13px;
-              font-weight: 800;
-              margin: 2px 0;
+              font-size: 15px;
+              font-weight: 900;
+              margin: 3px 0;
             }
             hr {
               border: none;
-              border-top: 1.5px dashed #000;
-              margin: 6px 0;
-              opacity: 0.8;
+              border-top: 2px dashed #000;
+              margin: 8px 0;
+              opacity: 0.9;
             }
             .bill-row {
               display: flex;
               justify-content: space-between;
-              font-size: 13px;
-              font-weight: 800;
-              margin: 3px 0;
+              font-size: 15px;
+              font-weight: 900;
+              margin: 4px 0;
             }
             table {
               width: 100%;
               border-collapse: collapse;
-              font-size: 13px;
-              font-weight: 700;
-              margin: 6px 0;
+              font-size: 16px;
+              font-weight: 800;
+              margin: 8px 0;
+              table-layout: fixed;
             }
             th, td {
-              padding: 4px 2px;
-              border-bottom: 1px dotted #888;
+              padding: 5px 2px;
+              border-bottom: 1.5px dotted #666;
               word-wrap: break-word;
+              overflow-wrap: break-word;
             }
             th {
               text-align: left;
               font-weight: 900;
-              border-bottom: 2px solid #000;
-              font-size: 12px;
+              border-bottom: 2.5px solid #000;
+              font-size: 14px;
               text-transform: uppercase;
+              letter-spacing: 0.5px;
             }
             .text-right {
               text-align: right;
@@ -330,47 +330,49 @@ $(document).ready(function () {
             .invoice-item-name {
               text-transform: uppercase;
               font-weight: 900;
-              font-size: 14px;
+              font-size: 17px;
               letter-spacing: 0.3px;
               text-align: left !important;
+              line-height: 1.3;
             }
             .footer-line {
               display: flex;
               justify-content: space-between;
-              font-weight: 800;
-              margin: 4px 0;
-              font-size: 14px;
+              font-weight: 900;
+              margin: 5px 0;
+              font-size: 17px;
             }
             .total-line {
               font-weight: 900;
-              font-size: 16px;
-              border-top: 2px solid #000;
-              padding-top: 5px;
-              margin-top: 5px;
+              font-size: 20px;
+              border-top: 3px solid #000;
+              padding-top: 7px;
+              margin-top: 7px;
+              letter-spacing: 0.5px;
             }
             .thanks {
               text-align: center;
-              font-weight: 800;
-              margin-top: 10px;
-              font-size: 14px;
-              letter-spacing: 0.8px;
+              font-weight: 900;
+              margin-top: 14px;
+              font-size: 17px;
+              letter-spacing: 1px;
             }
             .print-btn {
               text-align: center;
-              margin-top: 12px;
+              margin-top: 14px;
             }
             .print-btn button {
-              background: #222;
+              background: #000;
               color: #fff;
               border: none;
-              padding: 6px 16px;
-              font-size: 12px;
+              padding: 8px 20px;
+              font-size: 14px;
               font-weight: bold;
               cursor: pointer;
               border-radius: 4px;
             }
             .print-btn button:hover {
-              background: #444;
+              background: #333;
             }
             @media print {
               body { padding: 0; background: #fff; }
@@ -388,8 +390,8 @@ $(document).ready(function () {
                 margin:       0.05,
                 filename:     '${filename}',
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, letterRendering: true, useCORS: true },
-                jsPDF:        { unit: 'mm', format: [80, 220], orientation: 'portrait' }
+                html2canvas:  { scale: 3, letterRendering: true, useCORS: true },
+                jsPDF:        { unit: 'mm', format: [80, 260], orientation: 'portrait' }
               };
               html2pdf().set(opt).from(element).save();
             };

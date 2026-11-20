@@ -23,64 +23,119 @@
     <title>YUSUF</title>
   </head>
   <body>
-    <div class="container">
-      <h2 class="text-center mt-1 shop-heading">ASGHAR ALI (RINKU)</h2>
-      <button class="btn btn-success" id="generate-invoice">
-        Generate Invoice
+    <div class="container app-wrapper">
+      <div class="header-bar">
+        <h2 class="shop-heading text-center">ASGHAR ALI (RINKU)</h2>
+        <p class="sub-heading text-center">Hospital Road, Near Sadhu Medical · Siwan</p>
+      </div>
+
+      <button class="btn btn-success generate-btn" id="generate-invoice">
+        <i class="fas fa-file-invoice"></i> Generate Invoice
       </button>
 
-      <div class="row">
+      <div class="row g-4">
+        <!-- LEFT: FORM -->
         <div class="col-md-6">
-          <form action="" id="item-form">
-            <div class="form-group mb-3">
-              <label for="customer-name">Bill to:</label>
-              <input type="text" class="form-control" id="customer-name" />
+          <div class="card ui-card">
+            <div class="card-header ui-card-header">
+              <i class="fas fa-plus-circle"></i> Add Item
             </div>
-            <div class="form-group mb-3">
-              <label for="item-name">Item Name:</label>
-              <input type="text" class="form-control" id="item-name" />
+            <div class="card-body">
+              <form action="" id="item-form">
+                <div class="form-group mb-3">
+                  <label for="customer-name" class="form-label">
+                    <i class="fas fa-user"></i> Bill To
+                  </label>
+                  <input type="text" class="form-control ui-input" id="customer-name" placeholder="Customer name" />
+                </div>
+                <div class="form-group mb-3">
+                  <label for="item-name" class="form-label">
+                    <i class="fas fa-box"></i> Item Name
+                  </label>
+                  <input type="text" class="form-control ui-input" id="item-name" placeholder="Item name" />
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group mb-3">
+                      <label for="item-qty" class="form-label">
+                        <i class="fas fa-hashtag"></i> Qty
+                      </label>
+                      <input type="text" class="form-control ui-input" id="item-qty" placeholder="Qty" />
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group mb-3">
+                      <label for="item-price" class="form-label">
+                        <i class="fas fa-rupee-sign"></i> Price
+                      </label>
+                      <input type="text" class="form-control ui-input" id="item-price" placeholder="Price" />
+                    </div>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary ui-add-btn w-100">
+                  <i class="fas fa-cart-plus"></i> Add To Cart
+                </button>
+              </form>
             </div>
-            <div class="form-group mb-3">
-              <label for="item-qty">Item Qty:</label>
-              <input type="text" class="form-control" id="item-qty" />
-            </div>
-            <div class="form-group mb-4">
-              <label for="item-price">Item Price:</label>
-              <input type="text" class="form-control" id="item-price" />
-            </div>
-            <button type="submit" class="btn btn-primary">Add To Cart</button>
-          </form>
-        </div>
-
-        <div>
-          <br />
-        </div>
-
-        <div class="col-md-6 main">
-          <div>
-            <table class="table" id="cart-table">
-              <thead>
-                <tr>
-                  <th>Item</th>
-                  <th>Price</th>
-                  <th>Qty</th>
-                  <th>Amount</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
           </div>
-          <div>
-            <p id="total-qty">Total Qty : 0</p>
-            <p id="total-cost">Amount : 0</p>
-            <label for="prev-dues">Prev Dues : 0</label>
-            <input type="text" class="form-control" id="prev-dues" /><br />
+        </div>
 
-            <label for="amount-paid">Amount Paid:</label>
-            <input type="text" class="form-control" id="amount-paid" /><br />
-            <p id="current-due">Current Due: ₹0</p>
+        <!-- RIGHT: CART + TOTALS -->
+        <div class="col-md-6">
+          <div class="card ui-card mb-3">
+            <div class="card-header ui-card-header">
+              <i class="fas fa-shopping-cart"></i> Cart
+            </div>
+            <div class="card-body p-0">
+              <table class="table ui-table mb-0" id="cart-table">
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Qty</th>
+                    <th>Amount</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
 
-            <p id="total-amount">TOTAL : 0</p>
+          <div class="card ui-card">
+            <div class="card-header ui-card-header">
+              <i class="fas fa-calculator"></i> Summary
+            </div>
+            <div class="card-body">
+              <div class="summary-row">
+                <span>Total Qty</span>
+                <span id="total-qty">0</span>
+              </div>
+              <div class="summary-row">
+                <span>Amount</span>
+                <span id="total-cost">₹0.00</span>
+              </div>
+
+              <hr />
+
+              <div class="form-group mb-2">
+                <label for="prev-dues" class="form-label">Prev Dues</label>
+                <input type="text" class="form-control ui-input" id="prev-dues" placeholder="0" />
+              </div>
+              <div class="form-group mb-2">
+                <label for="amount-paid" class="form-label">Amount Paid</label>
+                <input type="text" class="form-control ui-input" id="amount-paid" placeholder="0" />
+              </div>
+
+              <div class="summary-row due-row">
+                <span>Current Due</span>
+                <span id="current-due">₹0.00</span>
+              </div>
+              <div class="summary-row total-row">
+                <span>TOTAL</span>
+                <span id="total-amount">₹0.00</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

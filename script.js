@@ -279,13 +279,13 @@ $(document).ready(function () {
             }
             .shop-address {
               text-align: center;
-              font-size: 14px;
+              font-size: 25px;
               font-weight: 800;
               line-height: 1.35;
             }
             .shop-phone {
               text-align: center;
-              font-size: 15px;
+              font-size: 20px;
               font-weight: 900;
               margin: 3px 0;
             }
@@ -305,7 +305,7 @@ $(document).ready(function () {
             table {
               width: 100%;
               border-collapse: collapse;
-              font-size: 16px;
+              font-size: 20px;
               font-weight: 800;
               margin: 8px 0;
               table-layout: fixed;
@@ -320,7 +320,7 @@ $(document).ready(function () {
               text-align: left;
               font-weight: 900;
               border-bottom: 2.5px solid #000;
-              font-size: 14px;
+              font-size: 18px;
               text-transform: uppercase;
               letter-spacing: 0.5px;
             }
@@ -330,7 +330,7 @@ $(document).ready(function () {
             .invoice-item-name {
               text-transform: uppercase;
               font-weight: 900;
-              font-size: 17px;
+              font-size: 22px;
               letter-spacing: 0.3px;
               text-align: left !important;
               line-height: 1.3;

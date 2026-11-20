@@ -177,9 +177,9 @@ $(document).ready(function () {
     var invoiceHtml = `
       <div class="invoice-container" id="thermal-invoice">
         <div class="shop-name">ASGHAR ALI (RINKU)</div>
-        <div class="shop-address">Hospital road, Near Sadhu Medical</div>
-        <div class="shop-address">Dr. MK Alam wali gali, Siwan</div>
-        <div class="shop-phone">PNo. 7717793294 / 9006500135</div>
+        <div class="shop-address">HOSPITAL ROAD, Near SADHU MEDICAL</div>
+        <div class="shop-address">Dr.MK ALAM WALI GALI, SIWAN</div>
+        <div class="shop-phone">7717793294 / 9006500135</div>
         <hr />
         <div class="bill-row">
           <span>Bill To: ${customerName}</span>
@@ -279,13 +279,13 @@ $(document).ready(function () {
             }
             .shop-address {
               text-align: center;
-              font-size: 25px;
+              font-size: 23px;
               font-weight: 800;
               line-height: 1.35;
             }
             .shop-phone {
               text-align: center;
-              font-size: 20px;
+              font-size: 25px;
               font-weight: 900;
               margin: 3px 0;
             }
@@ -298,7 +298,7 @@ $(document).ready(function () {
             .bill-row {
               display: flex;
               justify-content: space-between;
-              font-size: 15px;
+              font-size: 20px;
               font-weight: 900;
               margin: 4px 0;
             }

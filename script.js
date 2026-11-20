@@ -8,25 +8,27 @@ $(document).ready(function () {
   $("#cart-table").on("click", ".btn-danger", removeItemFromCart);
   $("#generate-invoice").on("click", generateInvoice);
 
-  // Detect "Enter" key and manually trigger "Add to Cart" when pressed
-  $('#item-form input').on('keydown', function (e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();  // Prevent form submission
-      addItemToCart(e);     // Trigger the addItemToCart function
+  // Enter key = Add to Cart
+  $("#item-form input").on("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addItemToCart(e);
     }
   });
 
   function addItemToCart(event) {
     event.preventDefault();
 
-    var itemName = $("#item-name").val();
-    var itemPrice = $("#item-price").val();
+    var itemName = $("#item-name").val().trim();
+    var itemPrice = $("#item-price").val().trim();
     var itemQty = parseInt($("#item-qty").val());
 
     if (
       customerName.trim() !== "" &&
-      itemName.trim() !== "" &&
-      itemPrice.trim() !== ""
+      itemName !== "" &&
+      itemPrice !== "" &&
+      !isNaN(itemQty) &&
+      itemQty > 0
     ) {
       var item = {
         name: itemName,
@@ -44,52 +46,32 @@ $(document).ready(function () {
           item.qty +
           "</td><td>₹" +
           (item.price * item.qty).toFixed(2) +
-          '</td><td><button class= "btn btn-sm btn-danger"><i class="fa fa-trash-alt"></i></button></td></tr>'
+          '</td><td><button class="btn btn-sm btn-danger"><i class="fa fa-trash-alt"></i></button></td></tr>'
       );
       updateTotalCost();
       updateTotalQty();
       updateTotalAmt();
-      
+
       $("#item-name").val("");
       $("#item-price").val("");
       $("#item-qty").val("");
-
-      // Focus the cursor back to the "item name" input field
       $("#item-name").focus();
-
     } else {
-      alert("Jawaid bhai customer name, item name, and item price fill kiiye.");
+      alert("Please fill customer name, item name, valid qty and price.");
     }
   }
 
-function removeItemFromCart() {
-  var row = $(this).closest("tr");
-  var index = row.index(); // Find the index of the row to remove
-
-  if (index >= 0) {
-    // Get the price and quantity of the item to be removed
-    var itemPrice = parseFloat(items[index].price);
-    var itemQty = parseInt(items[index].qty);
-
-    // Subtract the item's amount from the total cost
-    var itemTotal = itemPrice * itemQty;
-
-    // Remove the item from the `items` array
-    items.splice(index, 1);
-
-    // Remove the corresponding row from the table
-    row.remove();
-
-    // Update total cost and amount
-    updateTotalCost();
-    updateTotalQty();
-    updateTotalAmt(); // This will reflect the updated total including dues
-
-    // Log the adjustment for debugging purposes (optional)
-    console.log(`Removed item: ${itemTotal} subtracted from total.`);
+  function removeItemFromCart() {
+    var row = $(this).closest("tr");
+    var index = row.index();
+    if (index >= 0) {
+      items.splice(index, 1);
+      row.remove();
+      updateTotalCost();
+      updateTotalQty();
+      updateTotalAmt();
+    }
   }
-}
-
 
   function updateTotalCost() {
     var totalCost = 0;
@@ -109,27 +91,21 @@ function removeItemFromCart() {
     updateCurrentDue();
   });
 
-  // Function to update total amount
   function updateTotalAmt() {
     var totalAmt = 0;
-    
     items.forEach(function (item) {
       totalAmt += item.price * item.qty;
     });
-    
     totalAmt += prevDues;
-    
     $("#total-amount").text("TOTAL : ₹" + totalAmt.toFixed(2));
     updateCurrentDue();
   }
-  
+
   function updateCurrentDue() {
     var totalAmt = 0;
-    
     items.forEach(function (item) {
-        totalAmt += item.price * item.qty;
+      totalAmt += item.price * item.qty;
     });
-   
     totalAmt += prevDues;
     var currentDue = totalAmt - amountPaid;
     $("#current-due").text("Current Due: ₹" + currentDue.toFixed(2));
@@ -143,143 +119,11 @@ function removeItemFromCart() {
     $("#total-qty").text("Total Qty: " + totalQty);
   }
 
-  var currentTime = new Date();
-  var hours = currentTime.getHours();
-  var minutes = currentTime.getMinutes();
-  var ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12;
-  hours = hours ? hours : 12; // the hour '0' should be '12'
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-  var timeStr = hours + ":" + minutes + " " + ampm;
-
-  function generateInvoice() {
-    var totalCost = getTotalCost();
-    var totalAmt = totalCost + prevDues;
-    var currentDue = totalAmt - amountPaid;
-    var totalQty = getTotalQty();
-
-    var currentTime = new Date();
-    var hours = currentTime.getHours();
-    var minutes = currentTime.getMinutes();
-    var ampm = hours >= 12 ? "PM" : "AM";
-    hours = hours % 12;
-    hours = hours ? hours : 12; // Convert 0 to 12 for 12-hour format
-    minutes = minutes < 10 ? "0" + minutes : minutes; // Add leading zero if needed
-    var timeStr = hours + ":" + minutes + " " + ampm;
-
-    var invoice = `
-    <html>
-    <head>
-        <title>Invoice</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js" defer></script>
-
-      <style>
-      .logo-img {
-        width: 80px; 
-        height: auto; 
-      }
-      .d-flex {
-        justify-content: center; 
-    </style>
-
-    </head>
-    <body>
-        <div class="container mt-1">
-            <h6 class="text-center mb-0" id="savePdfButton">ASGHAR ALI (RINKU)</h6>
-            <p class="text-center mb-0" >Hospital road,
-Near Sadhu Medical</p>
-<p class="text-center mb-0" >Dr. MK Alam wali gali, Siwan</p>
-            <p class="text-center mt-0">PNo. 7717793294/9006500135</p>
-            <hr style="border: none; border-top: 1px dotted #000; width: 100%;" />
-            <p class="mb-0"><strong>Bill To: </strong> ${customerName}</p>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <p class="mb-0"><strong>DATE:</strong> ${getCurrentDate()}</p>
-                <p class="text-right mb-0"><strong>TM:</strong> ${timeStr}</p>
-            </div>
-            <hr style="border: none; border-top: 1px dotted #000; width: 100%; margin-bottom: 0px;" />
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th style="text-align: left;">S.N</th>
-                        <th style="text-align: left;">ITEM</th>
-                        <th style="text-align: right;">QTY</th>
-                        <th style="text-align: right;">RATE</th>
-                        <th style="text-align: right;">AMNT</th>
-                    </tr>
-                </thead>
-                <tbody>`;
-
-    items.forEach(function (item, index) {
-      invoice += `<tr>
-                      <td style="text-align: left;">${index + 1}</td>
-                      <td style="text-align: left;">${item.name}</td>
-                      <td style="text-align: right;">${item.qty}</td>
-                      <td style="text-align: right;">₹${item.price.toFixed(
-                        2
-                      )}</td>
-                      <td style="text-align: right;">₹${(
-                        item.price * item.qty
-                      ).toFixed(2)}</td>
-                    </tr>`;
-    });
-
-    invoice += `</tbody></table><footer>
-    <p class="mb-0">Total Qty: ${getTotalQty()}</p>
-
-    <h6 style="text-align: left;" class="mb-0">Previous Dues: <span style="float: right;"> ₹${prevDues.toFixed(
-      2
-    )}</span></h6> 
-
-    <h6 style="text-align: left;" class="mb-0">Total Amount: <span style="float: right;"> ₹${totalAmt.toFixed(
-      2
-    )}</span></h6>
-
-    <h6 style="text-align: left;" class="mb-0">Amount Paid: <span style="float: right;"> ₹${amountPaid.toFixed(
-      2
-    )}</span></h6>
-
-    <h6 style="text-align: left;" class="mb-0">Current Due: <span style="float: right;"> ₹${currentDue.toFixed(
-      2
-    )}</span></h6> 
-
-    <hr style="border: none; border-top: 1px dotted #000; width: 100%;" />
-
-    <p id="print-button" class="text-center mb-0">THANKS FOR VISIT</p>
-    </footer></div></body>
-
-    <script>
-      document.getElementById('print-button').addEventListener('click', function () {
-          window.print();
-      });
-      function saveAsPDF() {
-        const element = document.body; // Choose the element that you want to print as PDF
-  
-        html2pdf(element, {
-          margin:       1,
-          filename:     'invoice.pdf',
-          image:        { type: 'jpeg', quality: 0.98 },
-          html2canvas:  { scale: 2 },
-          jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-        });
-      }
-  
-      // Event listener for the save button
-      document.getElementById('savePdfButton').addEventListener('click', saveAsPDF);
-      </script>
-      </html>`;
-
-    var popup = window.open("", "_blank");
-    popup.document.open();
-    popup.document.write(invoice);
-    popup.document.close();
-  }
   function getCurrentDate() {
     var currentDate = new Date();
     var dd = String(currentDate.getDate()).padStart(2, "0");
-    var mm = String(currentDate.getMonth() + 1).padStart(2, "0"); // January is 0!
+    var mm = String(currentDate.getMonth() + 1).padStart(2, "0");
     var yyyy = currentDate.getFullYear();
-
     return dd + "/" + mm + "/" + yyyy;
   }
 
@@ -299,8 +143,228 @@ Near Sadhu Medical</p>
     return totalCost;
   }
 
-  // Function to update customer name
   $("#customer-name").on("input", function () {
-    customerName = $(this).val();
+    customerName = $(this).val().trim();
   });
+
+  function generateInvoice() {
+    if (items.length === 0) {
+      alert("No items added.");
+      return;
+    }
+    if (!customerName) {
+      alert("Please enter customer name.");
+      return;
+    }
+
+    var totalCost = getTotalCost();
+    var totalAmt = totalCost + prevDues;
+    var currentDue = totalAmt - amountPaid;
+    var totalQty = getTotalQty();
+
+    var now = new Date();
+    var hours = now.getHours();
+    var minutes = now.getMinutes();
+    var ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    var timeStr = hours + ":" + minutes + " " + ampm;
+    var dateStr = getCurrentDate();
+
+    // Filename: <customerName>_<dd-mm-yyyy>.pdf
+    var safeName = customerName.replace(/[^a-zA-Z0-9]/g, "_");
+    var filename = safeName + "_" + dateStr.replace(/\//g, "-") + ".pdf";
+
+    // Build invoice HTML
+    var invoiceHtml = `
+      <div class="invoice-container" id="thermal-invoice">
+        <div class="shop-name">ASGHAR ALI (RINKU)</div>
+        <div style="text-align:center; font-size:9px; font-weight:600;">Hospital road, Near Sadhu Medical</div>
+        <div style="text-align:center; font-size:9px; font-weight:600;">Dr. MK Alam wali gali, Siwan</div>
+        <div style="text-align:center; font-size:10px; font-weight:700;">PNo. 7717793294 / 9006500135</div>
+        <hr />
+        <div style="display:flex; justify-content:space-between; font-size:10px; font-weight:700;">
+          <span>Bill To: ${customerName}</span>
+          <span>${dateStr} ${timeStr}</span>
+        </div>
+        <hr />
+        <table>
+          <thead>
+            <tr>
+              <th style="width:8%;">S.N</th>
+              <th style="width:42%;">ITEM</th>
+              <th style="width:12%; text-align:right;">QTY</th>
+              <th style="width:19%; text-align:right;">RATE</th>
+              <th style="width:19%; text-align:right;">AMNT</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+
+    items.forEach(function (item, index) {
+      invoiceHtml += `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${item.name}</td>
+          <td class="text-right">${item.qty}</td>
+          <td class="text-right">₹${item.price.toFixed(2)}</td>
+          <td class="text-right">₹${(item.price * item.qty).toFixed(2)}</td>
+        </tr>
+      `;
+    });
+
+    invoiceHtml += `
+          </tbody>
+        </table>
+        <hr />
+        <div class="footer-line"><span>Total Qty:</span><span>${totalQty}</span></div>
+        <div class="footer-line"><span>Previous Dues:</span><span>₹${prevDues.toFixed(2)}</span></div>
+        <div class="footer-line total-line"><span>TOTAL:</span><span>₹${totalAmt.toFixed(2)}</span></div>
+        <div class="footer-line"><span>Amount Paid:</span><span>₹${amountPaid.toFixed(2)}</span></div>
+        <div class="footer-line"><span>Current Due:</span><span>₹${currentDue.toFixed(2)}</span></div>
+        <hr />
+        <div class="thanks">THANKS FOR VISIT</div>
+        <div class="print-btn">
+          <button onclick="window.print()"><i class="fas fa-print"></i> PRINT</button>
+        </div>
+        <div style="font-size:7px; text-align:center; margin-top:4px;">(80mm thermal ready)</div>
+      </div>
+    `;
+
+    var popup = window.open("", "_blank", "width=420,height=620");
+    popup.document.open();
+    popup.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8">
+          <title>${filename}</title>
+          <link rel="preconnect" href="https://fonts.googleapis.com">
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+          <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"><\/script>
+          <style>
+            body {
+              font-family: 'Courier New', Courier, monospace;
+              background: #fff;
+              margin: 0;
+              padding: 6px;
+              display: flex;
+              justify-content: center;
+            }
+            .invoice-container {
+              width: 80mm;
+              max-width: 80mm;
+              background: #fff;
+              padding: 4px 6px 8px;
+              font-size: 11px;
+              line-height: 1.3;
+              color: #000;
+              font-weight: 700;
+              border: 1px solid #ccc;
+            }
+            .shop-name {
+              font-family: 'Playfair Display', serif;
+              font-size: 18px;
+              font-weight: 700;
+              letter-spacing: 1px;
+              text-align: center;
+              margin: 0 0 2px;
+              color: #111;
+              text-shadow: 0.5px 0.5px 0 #aaa;
+              text-transform: uppercase;
+            }
+            hr {
+              border: none;
+              border-top: 1px dashed #000;
+              margin: 4px 0;
+              opacity: 0.7;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              font-size: 10px;
+              font-weight: 700;
+              margin: 4px 0;
+            }
+            th, td {
+              padding: 2px 1px;
+              border-bottom: 1px dotted #aaa;
+            }
+            th {
+              text-align: left;
+              font-weight: 800;
+              border-bottom: 1px solid #000;
+              font-size: 10px;
+              text-transform: uppercase;
+            }
+            .text-right {
+              text-align: right;
+            }
+            .footer-line {
+              display: flex;
+              justify-content: space-between;
+              font-weight: 700;
+              margin: 2px 0;
+              font-size: 11px;
+            }
+            .total-line {
+              font-weight: 900;
+              font-size: 12px;
+              border-top: 1px solid #000;
+              padding-top: 3px;
+              margin-top: 3px;
+            }
+            .thanks {
+              text-align: center;
+              font-weight: 700;
+              margin-top: 6px;
+              font-size: 11px;
+              letter-spacing: 0.5px;
+            }
+            .print-btn {
+              text-align: center;
+              margin-top: 8px;
+            }
+            .print-btn button {
+              background: #222;
+              color: #fff;
+              border: none;
+              padding: 4px 12px;
+              font-size: 10px;
+              font-weight: bold;
+              cursor: pointer;
+              border-radius: 3px;
+            }
+            .print-btn button:hover {
+              background: #444;
+            }
+            @media print {
+              body { padding: 0; background: #fff; }
+              .print-btn { display: none; }
+              .invoice-container { border: none; }
+            }
+          </style>
+        </head>
+        <body>
+          ${invoiceHtml}
+          <script>
+            window.onload = function() {
+              var element = document.getElementById('thermal-invoice');
+              var opt = {
+                margin:       0.05,
+                filename:     '${filename}',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, letterRendering: true, useCORS: true },
+                jsPDF:        { unit: 'mm', format: [80, 200], orientation: 'portrait' }
+              };
+              html2pdf().set(opt).from(element).save();
+            };
+          <\/script>
+        </body>
+      </html>
+    `);
+    popup.document.close();
+  }
 });

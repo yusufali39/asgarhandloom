@@ -179,22 +179,26 @@ $(document).ready(function () {
         <div class="container mt-1">
       <h3 class="shop-title text-center mb-0" id="savePdfButton"> 
       <img src="1770261049335.jpg" 
-     alt="logo" style="width:310px; height:85px; display:block; margin:0 auto;" /> </h3>
-        <hr />
-        <div class="bill-row">
-          <span>Bill To: ${customerName}</span>
-          <span>${dateStr}</span>
-        </div>
+     alt="logo" style="width:295px; height:85px; display:block; margin:0 auto;" /> </h3>
+
         <div class="bill-row">
           <span></span>
           <span>TM: ${timeStr}</span>
+          <span>${dateStr}</span>
         </div>
+
+     <hr />
+      
+        <div class="bill-row">
+          <span>Bill To: ${customerName}</span>
+        </div>
+        
         <hr />
         <table>
           <thead>
             <tr>
-              <th style="width:10%;">S.N</th>
-              <th style="width:34%;">ITEM</th>
+              <th style="width:15%;">S.N</th>
+              <th style="width:60%;">DESCRIPTION</th>
               <th style="width:15%; text-align:right;">QTY</th>
               <th style="width:21%; text-align:right;">RATE</th>
               <th style="width:23%; text-align:right;">AMNT</th>
@@ -266,29 +270,7 @@ $(document).ready(function () {
               border: 1px solid #ccc;
               font-family: 'Courier New', Courier, monospace;
             }
-            .shop-name {
-              font-family: 'Playfair Display', serif;
-              font-size: 28px;
-              font-weight: 700;
-              letter-spacing: 1px;
-              text-align: center;
-              margin: 0 0 4px;
-              color: #000;
-              text-shadow: 1px 1px 0 #999;
-              text-transform: uppercase;
-            }
-            .shop-address {
-              text-align: center;
-              font-size: 20px;
-              font-weight: 800;
-              line-height: 1.05;
-            }
-            .shop-phone {
-              text-align: center;
-              font-size: 17px;
-              font-weight: 900;
-              margin: 1px 0;
-            }
+            
             hr {
               border: none;
               border-top: 2px dashed #000;
@@ -330,7 +312,7 @@ $(document).ready(function () {
             .invoice-item-name {
               text-transform: uppercase;
               font-weight: 900;
-              font-size: 22px;
+              font-size: 15px;
               letter-spacing: 0.3px;
               text-align: left !important;
               line-height: 1.3;

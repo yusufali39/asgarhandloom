@@ -197,11 +197,11 @@ $(document).ready(function () {
         <table>
           <thead>
             <tr>
-              <th style="width:15%;">S.N</th>
+              <th style="width:16%;">SN</th>
               <th style="width:60%;">ITEMS</th>
               <th style="width:15%; text-align:right;">QTY</th>
-              <th style="width:21%; text-align:right;">RATE</th>
-              <th style="width:23%; text-align:right;">AMNT</th>
+              <th style="width:25%; text-align:right;">RATE</th>
+              <th style="width:25%; text-align:right;">AMNT</th>
             </tr>
           </thead>
           <tbody>
@@ -289,7 +289,7 @@ $(document).ready(function () {
               border-collapse: collapse;
               font-size: 20px;
               font-weight: 800;
-              margin: 8px 0;
+              margin: 4px 0;
               table-layout: fixed;
             }
             th, td {
@@ -313,9 +313,9 @@ $(document).ready(function () {
               text-transform: uppercase;
               font-weight: 900;
               font-size: 15px;
-              letter-spacing: 0.3px;
+              letter-spacing: 0.1px;
               text-align: left !important;
-              line-height: 1.3;
+              line-height: 1.2;
             }
             .footer-line {
               display: flex;

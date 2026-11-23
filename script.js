@@ -178,7 +178,7 @@ $(document).ready(function () {
       <div class="invoice-container" id="thermal-invoice">
         <div class="container mt-1">
       <h3 class="shop-title text-center mb-0" id="savePdfButton"> 
-      <img src="1770261049335.png" 
+      <img src="1770261049335.jpg" 
      alt="logo" style="width:350px; height:70px; display:block; margin:0 auto;" /> </h3>
         <hr />
         <div class="bill-row">

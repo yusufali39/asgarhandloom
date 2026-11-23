@@ -195,7 +195,7 @@ $(document).ready(function () {
             <tr>
               <th style="width:10%;">S.N</th>
               <th style="width:34%;">ITEM</th>
-              <th style="width:12%; text-align:right;">QTY</th>
+              <th style="width:15%; text-align:right;">QTY</th>
               <th style="width:21%; text-align:right;">RATE</th>
               <th style="width:23%; text-align:right;">AMNT</th>
             </tr>
@@ -272,22 +272,22 @@ $(document).ready(function () {
               font-weight: 700;
               letter-spacing: 1px;
               text-align: center;
-              margin: 0 0 6px;
+              margin: 0 0 4px;
               color: #000;
               text-shadow: 1px 1px 0 #999;
               text-transform: uppercase;
             }
             .shop-address {
               text-align: center;
-              font-size: 23px;
+              font-size: 20px;
               font-weight: 800;
-              line-height: 1.35;
+              line-height: 1.05;
             }
             .shop-phone {
               text-align: center;
-              font-size: 25px;
+              font-size: 17px;
               font-weight: 900;
-              margin: 3px 0;
+              margin: 1px 0;
             }
             hr {
               border: none;
@@ -322,7 +322,7 @@ $(document).ready(function () {
               border-bottom: 2.5px solid #000;
               font-size: 18px;
               text-transform: uppercase;
-              letter-spacing: 0.5px;
+              letter-spacing: 0.4px;
             }
             .text-right {
               text-align: right;

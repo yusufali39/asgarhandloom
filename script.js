@@ -3,27 +3,38 @@ $(document).ready(function () {
   var customerName = "";
   var prevDues = 0;
   var amountPaid = 0;
-  var invoiceCounter = 357; // Starting number matching your image
 
   $("#item-form").on("submit", addItemToCart);
   $("#cart-table").on("click", ".btn-danger", removeItemFromCart);
   $("#generate-invoice").on("click", generateInvoice);
 
   $("#item-form input").on("keydown", function (e) {
-    if (e.key === "Enter") { 
-      e.preventDefault(); 
-      addItemToCart(e); 
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addItemToCart(e);
     }
   });
 
   function addItemToCart(event) {
     event.preventDefault();
+
     var itemName = $("#item-name").val().trim();
     var itemPrice = $("#item-price").val().trim();
     var itemQty = parseInt($("#item-qty").val());
 
-    if (customerName.trim() !== "" && itemName !== "" && itemPrice !== "" && !isNaN(itemQty) && itemQty > 0) {
-      var item = { name: itemName, price: parseFloat(itemPrice), qty: itemQty };
+    if (
+      customerName.trim() !== "" &&
+      itemName !== "" &&
+      itemPrice !== "" &&
+      !isNaN(itemQty) &&
+      itemQty > 0
+    ) {
+      var item = {
+        name: itemName,
+        price: parseFloat(itemPrice),
+        qty: itemQty,
+      };
+
       items.push(item);
 
       $("#cart-table tbody").append(
@@ -36,10 +47,14 @@ $(document).ready(function () {
         "</tr>"
       );
 
-      updateTotals();
-      $("#item-name").val("").focus();
+      updateTotalCost();
+      updateTotalQty();
+      updateTotalAmt();
+
+      $("#item-name").val("");
       $("#item-price").val("");
       $("#item-qty").val("");
+      $("#item-name").focus();
     } else {
       alert("Please fill customer name, item name, valid qty and price.");
     }
@@ -48,134 +63,158 @@ $(document).ready(function () {
   function removeItemFromCart() {
     var row = $(this).closest("tr");
     var index = row.index();
-    if (index >= 0) { 
-      items.splice(index, 1); 
-      row.remove(); 
-      updateTotals(); 
+    if (index >= 0) {
+      items.splice(index, 1);
+      row.remove();
+      updateTotalCost();
+      updateTotalQty();
+      updateTotalAmt();
     }
   }
 
-  function updateTotals() {
-    var totalCost = 0; 
-    var totalQty = 0;
-    
-    items.forEach(function (item) { 
-      totalCost += item.price * item.qty; 
-      totalQty += item.qty; 
+  function updateTotalCost() {
+    var totalCost = 0;
+    items.forEach(function (item) {
+      totalCost += item.price * item.qty;
     });
-    
     $("#total-cost").text("₹" + totalCost.toFixed(2));
-    $("#total-qty").text(totalQty);
-
-    var totalAmt = totalCost + prevDues;
-    $("#total-amount").text("₹" + totalAmt.toFixed(2));
-    $("#current-due").text("₹" + (totalAmt - amountPaid).toFixed(2));
   }
 
-  $("#prev-dues").on("input", function () { 
-    prevDues = parseFloat($(this).val()) || 0; 
-    updateTotals(); 
+  $("#prev-dues").on("input", function () {
+    prevDues = parseFloat($(this).val()) || 0;
+    updateTotalAmt();
   });
-  
-  $("#amount-paid").on("input", function () { 
-    amountPaid = parseFloat($(this).val()) || 0; 
-    updateTotals(); 
+
+  $("#amount-paid").on("input", function () {
+    amountPaid = parseFloat($(this).val()) || 0;
+    updateCurrentDue();
   });
-  
-  $("#customer-name").on("input", function () { 
-    customerName = $(this).val().trim(); 
+
+  function updateTotalAmt() {
+    var totalAmt = 0;
+    items.forEach(function (item) {
+      totalAmt += item.price * item.qty;
+    });
+    totalAmt += prevDues;
+    $("#total-amount").text("₹" + totalAmt.toFixed(2));
+    updateCurrentDue();
+  }
+
+  function updateCurrentDue() {
+    var totalAmt = 0;
+    items.forEach(function (item) {
+      totalAmt += item.price * item.qty;
+    });
+    totalAmt += prevDues;
+    var currentDue = totalAmt - amountPaid;
+    $("#current-due").text("₹" + currentDue.toFixed(2));
+  }
+
+  function updateTotalQty() {
+    var totalQty = 0;
+    items.forEach(function (item) {
+      totalQty += item.qty;
+    });
+    $("#total-qty").text(totalQty);
+  }
+
+  function getCurrentDate() {
+    var currentDate = new Date();
+    var dd = String(currentDate.getDate()).padStart(2, "0");
+    var mm = String(currentDate.getMonth() + 1).padStart(2, "0");
+    var yyyy = currentDate.getFullYear();
+    return dd + "/" + mm + "/" + yyyy;
+  }
+
+  function getTotalQty() {
+    var totalQty = 0;
+    items.forEach(function (item) {
+      totalQty += item.qty;
+    });
+    return totalQty;
+  }
+
+  function getTotalCost() {
+    var totalCost = 0;
+    items.forEach(function (item) {
+      totalCost += item.price * item.qty;
+    });
+    return totalCost;
+  }
+
+  $("#customer-name").on("input", function () {
+    customerName = $(this).val().trim();
   });
 
   function generateInvoice() {
-    if (items.length === 0) { 
-      alert("No items added."); 
-      return; 
+    if (items.length === 0) {
+      alert("No items added.");
+      return;
     }
-    if (!customerName) { 
-      alert("Please enter customer name."); 
-      return; 
+    if (!customerName) {
+      alert("Please enter customer name.");
+      return;
     }
 
-    var totalCost = 0; 
-    var totalQty = 0;
-    items.forEach(function (item) { 
-      totalCost += item.price * item.qty; 
-      totalQty += item.qty; 
-    });
-    
+    var totalCost = getTotalCost();
     var totalAmt = totalCost + prevDues;
     var currentDue = totalAmt - amountPaid;
+    var totalQty = getTotalQty();
 
     var now = new Date();
-    var hours = now.getHours(); 
-    var minutes = now.getMinutes(); 
-    
-    // Format Time
-    var displayHours = hours % 12;
-    displayHours = displayHours ? displayHours : 12;
-    var displayMinutes = minutes < 10 ? "0" + minutes : minutes;
-    var timeStr = displayHours + ":" + displayMinutes;
-    
-    // Format Date
-    var dd = String(now.getDate()).padStart(2, "0");
-    var mm = String(now.getMonth() + 1).padStart(2, "0");
-    var yyyy = now.getFullYear();
-    var dateStr = dd + "-" + mm + "-" + yyyy;
+    var hours = now.getHours();
+    var minutes = now.getMinutes();
+    var ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    var timeStr = hours + ":" + minutes + " " + ampm;
+    var dateStr = getCurrentDate();
 
     var safeName = customerName.replace(/[^a-zA-Z0-9]/g, "_");
-    var filename = safeName + "_" + dateStr + ".pdf";
-    
-    // Invoice Number Logic
-    invoiceCounter++;
-    var invNo = String(invoiceCounter).padStart(6, '0');
+    var filename = safeName + "_" + dateStr.replace(/\//g, "-") + ".pdf";
 
-    // Build Invoice HTML
     var invoiceHtml = `
-      <div class="thermal-receipt" id="thermal-invoice">
-        <div class="text-center mb-2">
-          <div style="font-size: 16px;">ASGHAR ALI (RINKU)</div>
-          <div style="font-size: 12px;">Hospital Road, Near Sadhu Medical</div>
+      <div class="invoice-container" id="thermal-invoice">
+        <div class="container mt-1">
+      <h3 class="shop-title text-center mb-0" id="savePdfButton"> 
+      <img src="1770261049335.jpg" 
+     alt="logo" style="width:295px; height:85px; display:block; margin:0 auto;" /> </h3>
+
+        <div class="bill-row">
+          <span></span>
+          <span>TM: ${timeStr}</span>
+          <span>${dateStr}</span>
         </div>
-        
-        <div class="dotted-line"></div>
-        
-        <div class="text-center receipt-title">ESTIMATE</div>
-        
-        <div class="dotted-line"></div>
-        
-        <div class="meta-row mb-1">
-          <span>NO.${invNo}</span>
-          <span>SLM- 0 ${dateStr}</span>
-        </div>
-        
-        <div class="dotted-line"></div>
-        
-        <div class="meta-row" style="margin-bottom: 4px;">
+
+     <hr />
+      
+        <div class="bill-row">
           <span>Bill To: ${customerName}</span>
         </div>
         
-        <table class="receipt-table">
+        <hr />
+        <table>
           <thead>
             <tr>
-              <th class="col-sn">S.N</th>
-              <th class="col-desc">DESCRIPTION</th>
-              <th class="col-qty text-right">QTY</th>
-              <th class="col-rate text-right">RATE</th>
-              <th class="col-amt text-right">AMOUNT</th>
+              <th style="width:16%;">SN</th>
+              <th style="width:60%;">ITEMS</th>
+              <th style="width:15%; text-align:right;">QTY</th>
+              <th style="width:25%; text-align:right;">RATE</th>
+              <th style="width:25%; text-align:right;">AMNT</th>
             </tr>
           </thead>
           <tbody>
     `;
 
     items.forEach(function (item, index) {
-      var sn = String(index + 1).padStart(3, '0');
       invoiceHtml += `
         <tr>
-          <td>${sn}</td>
-          <td style="text-transform: uppercase;">${item.name}</td>
-          <td class="text-right">${item.qty.toFixed(2)}</td>
-          <td class="text-right">${item.price.toFixed(2)}</td>
-          <td class="text-right">${(item.price * item.qty).toFixed(2)}</td>
+          <td>${index + 1}</td>
+          <td class="invoice-item-name">${item.name}</td>
+          <td class="text-right">${item.qty}</td>
+          <td class="text-right">₹${item.price.toFixed(2)}</td>
+          <td class="text-right">₹${(item.price * item.qty).toFixed(2)}</td>
         </tr>
       `;
     });
@@ -183,35 +222,18 @@ $(document).ready(function () {
     invoiceHtml += `
           </tbody>
         </table>
-        
-        <div class="dotted-line"></div>
-        
-        <div class="subtot-row">
-          <span>SUB_TOT ITM= ${items.length}</span>
-          <span>Q=${totalQty.toFixed(2)}</span>
-          <span>${totalCost.toFixed(2)}</span>
+        <hr />
+        <div class="footer-line"><span>Total Qty:</span><span>${totalQty}</span></div>
+        <div class="footer-line"><span>Previous Dues:</span><span>₹${prevDues.toFixed(2)}</span></div>
+        <div class="footer-line total-line"><span>TOTAL:</span><span>₹${totalAmt.toFixed(2)}</span></div>
+        <div class="footer-line"><span>Amount Paid:</span><span>₹${amountPaid.toFixed(2)}</span></div>
+        <div class="footer-line"><span>Current Due:</span><span>₹${currentDue.toFixed(2)}</span></div>
+        <hr />
+        <div class="thanks">THANKS FOR VISIT</div>
+        <div class="print-btn">
+          <button onclick="window.print()"><i class="fas fa-print"></i> PRINT</button>
         </div>
-        
-        <div class="dotted-line"></div>
-        
-        <div class="subtot-row total-row-big">
-          <span>TOTAL</span>
-          <span>${totalAmt.toFixed(2)}</span>
-        </div>
-        
-        <div class="dotted-line"></div>
-        
-        <div class="footer-msg">
-          <span>THANKS FOR VISIT........HAVE A NICE DAY</span>
-        </div>
-        <div class="footer-msg mb-2">
-          <span>C G</span>
-          <span>${hours}:${minutes}:${now.getSeconds()} M/C NO 1</span>
-        </div>
-        
-        <div class="print-btn" style="text-align: center; margin-top: 15px;">
-          <button onclick="window.print()" style="padding: 5px 15px; font-weight: bold; font-family: sans-serif;">PRINT</button>
-        </div>
+        <div style="font-size:11px; text-align:center; margin-top:8px;">(80mm thermal ready)</div>
       </div>
     `;
 
@@ -223,11 +245,122 @@ $(document).ready(function () {
         <head>
           <meta charset="UTF-8">
           <title>${filename}</title>
-          <link rel="stylesheet" href="style.css">
+          <link rel="preconnect" href="https://fonts.googleapis.com">
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+          <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
           <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"><\/script>
           <style>
-            body { display: flex; justify-content: center; background: #ccc; padding: 20px; }
-            .thermal-receipt { background: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+            body {
+              font-family: 'Courier New', Courier, monospace;
+              background: #fff;
+              margin: 0;
+              padding: 8px;
+              display: flex;
+              justify-content: center;
+            }
+            .invoice-container {
+              width: 80mm;
+              max-width: 80mm;
+              background: #fff;
+              padding: 8px 6px 12px;
+              font-size: 17px;
+              line-height: 1.5;
+              color: #000;
+              font-weight: 900;
+              border: 1px solid #ccc;
+              font-family: 'Courier New', Courier, monospace;
+            }
+            
+            hr {
+              border: none;
+              border-top: 2px dashed #000;
+              margin: 8px 0;
+              opacity: 0.9;
+            }
+            .bill-row {
+              display: flex;
+              justify-content: space-between;
+              font-size: 20px;
+              font-weight: 900;
+              margin: 4px 0;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              font-size: 20px;
+              font-weight: 800;
+              margin: 4px 0;
+              table-layout: fixed;
+            }
+            th, td {
+              padding: 5px 2px;
+              border-bottom: 1.5px dotted #666;
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+            }
+            th {
+              text-align: left;
+              font-weight: 900;
+              border-bottom: 2.5px solid #000;
+              font-size: 18px;
+              text-transform: uppercase;
+              letter-spacing: 0.4px;
+            }
+            .text-right {
+              text-align: right;
+            }
+            .invoice-item-name {
+              text-transform: uppercase;
+              font-weight: 900;
+              font-size: 15px;
+              letter-spacing: 0.1px;
+              text-align: left !important;
+              line-height: 1.2;
+            }
+            .footer-line {
+              display: flex;
+              justify-content: space-between;
+              font-weight: 900;
+              margin: 5px 0;
+              font-size: 17px;
+            }
+            .total-line {
+              font-weight: 900;
+              font-size: 20px;
+              border-top: 3px solid #000;
+              padding-top: 7px;
+              margin-top: 7px;
+              letter-spacing: 0.5px;
+            }
+            .thanks {
+              text-align: center;
+              font-weight: 900;
+              margin-top: 14px;
+              font-size: 17px;
+              letter-spacing: 1px;
+            }
+            .print-btn {
+              text-align: center;
+              margin-top: 14px;
+            }
+            .print-btn button {
+              background: #000;
+              color: #fff;
+              border: none;
+              padding: 8px 20px;
+              font-size: 14px;
+              font-weight: bold;
+              cursor: pointer;
+              border-radius: 4px;
+            }
+            .print-btn button:hover {
+              background: #333;
+            }
+            @media print {
+              body { padding: 0; background: #fff; }
+              .print-btn { display: none; }
+              .invoice-container { border: none; }
+            }
           </style>
         </head>
         <body>
@@ -236,11 +369,11 @@ $(document).ready(function () {
             window.onload = function() {
               var element = document.getElementById('thermal-invoice');
               var opt = {
-                margin:       0,
+                margin:       0.05,
                 filename:     '${filename}',
-                image:        { type: 'jpeg', quality: 1 },
-                html2canvas:  { scale: 4, useCORS: true },
-                jsPDF:        { unit: 'mm', format: [80, 200], orientation: 'portrait' }
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 3, letterRendering: true, useCORS: true },
+                jsPDF:        { unit: 'mm', format: [80, 260], orientation: 'portrait' }
               };
               html2pdf().set(opt).from(element).save();
             };

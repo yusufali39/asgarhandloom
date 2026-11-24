@@ -197,24 +197,25 @@ $(document).ready(function () {
         <table>
           <thead>
             <tr>
-              <th style="width:16%;">SN</th>
-              <th style="width:60%;">ITEMS</th>
-              <th style="width:20%; text-align:right;">QTY</th>
-              <th style="width:30%; text-align:right;">RATE</th>
-              <th style="width:30%; text-align:right;">AMNT</th>
+              <th style="width:8%;">SN</th>
+              <th style="width:42%;">ITEMS</th>
+              <th style="width:10%; text-align:right;">QTY</th>
+              <th style="width:20%; text-align:right;">RATE</th>
+              <th style="width:20%; text-align:right;">AMNT</th>
             </tr>
           </thead>
           <tbody>
     `;
 
     items.forEach(function (item, index) {
+      // Using Math.round to remove .00 and display as integer
       invoiceHtml += `
         <tr>
           <td>${index + 1}</td>
           <td class="invoice-item-name">${item.name}</td>
           <td class="text-right">${item.qty}</td>
-          <td class="text-right">₹${item.price.toFixed(2)}</td>
-          <td class="text-right">₹${(item.price * item.qty).toFixed(2)}</td>
+          <td class="text-right">₹${Math.round(item.price)}</td>
+          <td class="text-right">₹${Math.round(item.price * item.qty)}</td>
         </tr>
       `;
     });
@@ -223,10 +224,10 @@ $(document).ready(function () {
           </tbody>
         </table>
         <div class="footer-line"><span>T QTY:</span><span>${totalQty}</span></div>
-        <div class="footer-line total-line"><span>Prev. Dues:</span><span>₹${prevDues.toFixed(2)}</span></div>
-        <div class="footer-line"><span>TOTAL:</span><span>₹${totalAmt.toFixed(2)}</span></div>
-        <div class="footer-line"><span>Amount Paid:</span><span>₹${amountPaid.toFixed(2)}</span></div>
-        <div class="footer-line"><span>Current Due:</span><span>₹${currentDue.toFixed(2)}</span></div>
+        <div class="footer-line total-line"><span>Prev. Dues:</span><span>₹${Math.round(prevDues)}</span></div>
+        <div class="footer-line"><span>TOTAL:</span><span>₹${Math.round(totalAmt)}</span></div>
+        <div class="footer-line"><span>Amount Paid:</span><span>₹${Math.round(amountPaid)}</span></div>
+        <div class="footer-line"><span>Current Due:</span><span>₹${Math.round(currentDue)}</span></div>
         <hr />
         <div class="thanks">THANKS FOR VISIT</div>
         <div class="print-btn">
@@ -285,7 +286,7 @@ $(document).ready(function () {
             table {
               width: 100%;
               border-collapse: collapse;
-              font-size: 17px;
+              font-size: 15px; /* Slightly reduced to help fit content */
               font-weight: 800;
               margin: 2px 0;
               table-layout: fixed;
@@ -295,12 +296,13 @@ $(document).ready(function () {
               border-bottom: 1.5px dotted #666;
               word-wrap: break-word;
               overflow-wrap: break-word;
+              white-space: nowrap; /* Prevent wrapping unless necessary */
             }
             th {
               text-align: left;
               font-weight: 900;
               border-bottom: 2.5px solid #000;
-              font-size: 18px;
+              font-size: 16px;
               text-transform: uppercase;
               letter-spacing: 0.4px;
             }
@@ -310,10 +312,11 @@ $(document).ready(function () {
             .invoice-item-name {
               text-transform: uppercase;
               font-weight: 900;
-              font-size: 17px;
+              font-size: 15px;
               letter-spacing: 0.1px;
               text-align: left !important;
               line-height: 1.2;
+              white-space: normal; /* Allow item names to wrap if very long */
             }
             .footer-line {
               display: flex;

@@ -285,7 +285,7 @@ $(document).ready(function () {
             table {
               width: 100%;
               border-collapse: collapse;
-              font-size: 20px;
+              font-size: 17px;
               font-weight: 800;
               margin: 2px 0;
               table-layout: fixed;
@@ -310,7 +310,7 @@ $(document).ready(function () {
             .invoice-item-name {
               text-transform: uppercase;
               font-weight: 900;
-              font-size: 15px;
+              font-size: 17px;
               letter-spacing: 0.1px;
               text-align: left !important;
               line-height: 1.2;

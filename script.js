@@ -192,16 +192,16 @@ $(document).ready(function () {
         <div class="bill-row">
           <span>Bill To: ${customerName}</span>
         </div>
-        
         <hr />
+        
         <table>
           <thead>
             <tr>
               <th style="width:16%;">SN</th>
               <th style="width:60%;">ITEMS</th>
-              <th style="width:15%; text-align:right;">QTY</th>
-              <th style="width:25%; text-align:right;">RATE</th>
-              <th style="width:25%; text-align:right;">AMNT</th>
+              <th style="width:20%; text-align:right;">QTY</th>
+              <th style="width:30%; text-align:right;">RATE</th>
+              <th style="width:30%; text-align:right;">AMNT</th>
             </tr>
           </thead>
           <tbody>
@@ -222,10 +222,9 @@ $(document).ready(function () {
     invoiceHtml += `
           </tbody>
         </table>
-        <hr />
-        <div class="footer-line"><span>Total Qty:</span><span>${totalQty}</span></div>
-        <div class="footer-line"><span>Previous Dues:</span><span>₹${prevDues.toFixed(2)}</span></div>
-        <div class="footer-line total-line"><span>TOTAL:</span><span>₹${totalAmt.toFixed(2)}</span></div>
+        <div class="footer-line"><span>T QTY:</span><span>${totalQty}</span></div>
+        <div class="footer-line total-line"><span>Prev. Dues:</span><span>₹${prevDues.toFixed(2)}</span></div>
+        <div class="footer-line"><span>TOTAL:</span><span>₹${totalAmt.toFixed(2)}</span></div>
         <div class="footer-line"><span>Amount Paid:</span><span>₹${amountPaid.toFixed(2)}</span></div>
         <div class="footer-line"><span>Current Due:</span><span>₹${currentDue.toFixed(2)}</span></div>
         <hr />
@@ -233,7 +232,6 @@ $(document).ready(function () {
         <div class="print-btn">
           <button onclick="window.print()"><i class="fas fa-print"></i> PRINT</button>
         </div>
-        <div style="font-size:11px; text-align:center; margin-top:8px;">(80mm thermal ready)</div>
       </div>
     `;
 
@@ -282,18 +280,18 @@ $(document).ready(function () {
               justify-content: space-between;
               font-size: 20px;
               font-weight: 900;
-              margin: 4px 0;
+              margin: 2px 0;
             }
             table {
               width: 100%;
               border-collapse: collapse;
               font-size: 20px;
               font-weight: 800;
-              margin: 4px 0;
+              margin: 2px 0;
               table-layout: fixed;
             }
             th, td {
-              padding: 5px 2px;
+              padding: 2px 1px;
               border-bottom: 1.5px dotted #666;
               word-wrap: break-word;
               overflow-wrap: break-word;
@@ -328,14 +326,14 @@ $(document).ready(function () {
               font-weight: 900;
               font-size: 20px;
               border-top: 3px solid #000;
-              padding-top: 7px;
-              margin-top: 7px;
-              letter-spacing: 0.5px;
+              padding-top: 5px;
+              margin-top: 5px;
+              letter-spacing: 0.2px;
             }
             .thanks {
               text-align: center;
               font-weight: 900;
-              margin-top: 14px;
+              margin-top: 10px;
               font-size: 17px;
               letter-spacing: 1px;
             }
